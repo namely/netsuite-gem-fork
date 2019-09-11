@@ -5,7 +5,20 @@ describe NetSuite::Actions::Search do
   after(:all) { savon.unmock! }
 
   it "handles custom auth credentials" do
-    allow(NetSuite::Configuration).to receive(:connection).and_return(double().as_null_object)
+    allow(NetSuite::Configuration).to receive(:connection).and_return(
+      double('response',
+        body: {
+          search_response: {
+            search_result: {
+              total_records: 0,
+              status: {
+                :@is_success => true
+              }
+            }
+          }
+        }
+      ).as_null_object
+    )
 
     credentials = {
       email: 'fake@domain.com',
