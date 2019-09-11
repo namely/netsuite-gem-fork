@@ -233,17 +233,17 @@ module NetSuite
       end
 
       def response_errors
-        if response_hash[:status] && response_hash[:status][:status_detail]
+        if response_hash[:status] && response_hash.dig(:status, :status_detail)
           @response_errors ||= errors
         end
       end
 
       def response_hash
-        @response_hash ||= @response.to_hash[:search_response][:search_result]
+        @response_hash ||= @response.to_hash.dig(:search_response, :search_result)
       end
 
       def errors
-        error_obj = response_hash[:status][:status_detail]
+        error_obj = response_hash.dig(:status, :status_detail)
         error_obj = [error_obj] if error_obj.class == Hash
         error_obj.map do |error|
           NetSuite::Error.new(error)
