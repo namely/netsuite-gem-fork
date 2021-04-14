@@ -1,17 +1,39 @@
-# https://leonid.shevtsov.me/post/multiple-rubies-on-circleci/
+version: 2.1
 
-machine:
-  environment:
-    RUBY_VERSIONS: 2.0.0,2.1.10,2.2.9,2.3.7,2.4.4,2.5.1,2.6.1
+orbs:
+  # orbs are basically bundles of pre-written build scripts that work for common cases
+  # https://github.com/CircleCI-Public/ruby-orb
+  ruby: circleci/ruby@1.1.2
 
-dependencies:
-  override:
-    - gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-    - rvm get head
-    - rvm install $RUBY_VERSIONS
-    - rvm $RUBY_VERSIONS --verbose do gem install bundler -v 1.17.3
-    - rvm $RUBY_VERSIONS --verbose do bundle install
+jobs:
+  # skipping build step because Gemfile.lock is not included in the source
+  # this makes the bundler caching step a noop
+  test:
+    parameters:
+      ruby-version:
+        type: string
+    docker:
+      - image: cimg/ruby:<< parameters.ruby-version >>
+    steps:
+      - checkout
+      - ruby/install-deps:
+          bundler-version: '2.1.4'
+          with-cache: false
+          # without specifying a non-standard path `--deployment` will be used when running bundler
+          # which causes the bundler to fail
+          path: './vendor/custom_bundle'
+      - ruby/rspec-test
 
-test:
-  override:
-    - rvm $RUBY_VERSIONS --verbose do bundle exec rspec spec
+# strangely, there seems to be very little documentation about exactly how martix builds work.
+# By defining a param inside your job definition, Circle CI will automatically spawn a job for
+# unique param value passed via `matrix`. Neat!
+# https://circleci.com/blog/circleci-matrix-jobs/
+workflows:
+  build_and_test:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              # https://github.com/CircleCI-Public/cimg-ruby
+              # only supports the last three ruby versions
+              ruby-version: ["2.5", "2.6", "2.7"]

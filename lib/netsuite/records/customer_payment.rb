@@ -17,14 +17,18 @@ module NetSuite
 
       field :custom_field_list, CustomFieldList
       field :apply_list,        CustomerPaymentApplyList
+      field :credit_list,       CustomerPaymentCreditList
 
       read_only_fields :applied, :balance, :pending, :total, :unapplied
 
-      record_refs :account, :ar_acct, :credit_card, :credit_card_processor, :custom_form, :customer, :department, :klass,
-        :location, :payment_method, :posting_period, :subsidiary, :currency
+      record_refs :account, :ar_acct, :credit_card, :credit_card_processor,
+        :custom_form, :customer, :department, :klass, :location,
+        :payment_method, :payment_option, :posting_period, :subsidiary,
+        :currency
 
       attr_reader   :internal_id
       attr_accessor :external_id
+      attr_accessor :search_joins
 
       def initialize(attributes = {})
         @internal_id = attributes.delete(:internal_id) || attributes.delete(:@internal_id)

@@ -17,6 +17,7 @@ module NetSuite
     def connection(params={}, credentials={})
       client = Savon.client({
         wsdl: cached_wsdl || wsdl,
+        endpoint: endpoint,
         read_timeout: read_timeout,
         open_timeout: open_timeout,
         namespaces: namespaces,
@@ -92,6 +93,18 @@ module NetSuite
       end
 
       attributes[:api_version] = version
+    end
+
+    def endpoint=(endpoint)
+      attributes[:endpoint] = endpoint
+    end
+
+    def endpoint(endpoint=nil)
+      if endpoint
+        self.endpoint = endpoint
+      else
+        attributes[:endpoint]
+      end
     end
 
     def sandbox=(flag)
@@ -350,7 +363,10 @@ module NetSuite
 
     def logger(value = nil)
       if value.nil?
-        attributes[:logger] ||= ::Logger.new((log && !log.empty?) ? log : $stdout)
+        # if passed a IO object (like StringIO) `empty?` won't exist
+        valid_log = log && !(log.respond_to?(:empty?) && log.empty?)
+
+        attributes[:logger] ||= ::Logger.new(valid_log ? log : $stdout)
       else
         attributes[:logger] = value
       end
@@ -370,12 +386,13 @@ module NetSuite
     end
 
     def log_level(value = nil)
-      self.log_level = value || :debug
-      attributes[:log_level]
+      self.log_level = value if value
+
+      attributes[:log_level] || :debug
     end
 
     def log_level=(value)
-      attributes[:log_level] ||= value
+      attributes[:log_level] = value
     end
   end
 end
