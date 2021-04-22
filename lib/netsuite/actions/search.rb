@@ -239,7 +239,7 @@ module NetSuite
       end
 
       def response_hash
-        @response_hash ||= @response.to_hash.dig(:search_response, :search_result)
+        @response_hash ||= search_result.to_hash
       end
 
       def errors
