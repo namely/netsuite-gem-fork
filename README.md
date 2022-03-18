@@ -1,4 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
+ 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/bfabada245a447199e69de8a2953c3d7)](https://app.codacy.com/gh/namely/netsuite-gem-fork/dashboard)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/bfabada245a447199e69de8a2953c3d7)](https://app.codacy.com/gh/namely/netsuite-gem-fork/dashboard)
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
