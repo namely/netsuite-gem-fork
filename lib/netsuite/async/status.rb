@@ -17,7 +17,7 @@ module NetSuite
       #</soap:Body>
 
       def self.get(options = {}, credentials = {})
-        response = NetSuite::Configuration.connection(credentials).call(:check_async_status, :message => request_body(options))
+        response = NetSuite::Configuration.connection({}, credentials).call(:check_async_status, :message => request_body(options))
         new(response.to_hash[:check_async_status_response][:async_status_result])
       end
 
