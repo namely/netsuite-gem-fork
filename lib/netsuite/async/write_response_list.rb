@@ -13,8 +13,8 @@ module NetSuite
         @list = responses.map { |response| NetSuite::Async::WriteResponse.new(response) }
       end
 
-      def self.get(options = {})
-        response = NetSuite::Configuration.connection({element_form_default: :unqualified}).call(:get_async_result, message: request_body(options))
+      def self.get(options = {}, credentials = {})
+        response = NetSuite::Configuration.connection({}, credentials).call(:get_async_result, message: request_body(options))
         self.new(response.to_hash[:get_async_result_response][:async_result])
       end
 
