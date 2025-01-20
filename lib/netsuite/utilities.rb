@@ -45,11 +45,11 @@ module NetSuite
         #      as of 1/20/18 NS will start using the account ID to determine
         #      if a account is sandbox (123_SB1) as opposed to using a sandbox domain
 
-        wsdl: 'https://webservices.netsuite.com/wsdl/v2017_2_0/netsuite.wsdl',
+        wsdl: 'https://webservices.netsuite.com/wsdl/v2022_2_0/netsuite.wsdl',
 
         # NOTE don't inherit default namespace settings, it includes the API version
         namespaces: {
-          'xmlns:platformCore' => "urn:core_2017_2.platform.webservices.netsuite.com"
+          'xmlns:platformCore' => "urn:core_2022_2.platform.webservices.netsuite.com"
         },
 
         soap_header: {}
